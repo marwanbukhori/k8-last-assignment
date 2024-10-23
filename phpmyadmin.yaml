@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pma-deployment
+  labels:
+    app: pma-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pma-deployment
+  template:
+    metadata:
+      labels:
+        app: pma-deployment
+    spec:
+      containers:
+        - name: phpmyadmin
+          image: phpmyadmin:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: PMA_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: assignment-configmap
+                  key: PMA_USER
+            - name: PMA_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: assignment-configmap
+                  key: PMA_HOST
+            - name: PMA_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: assignment-configmap
+                  key: PMA_PORT
+            - name: PMA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: assignment-secret
+                  key: PMA_PASSWORD
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pma-service
+spec:
+  selector:
+    app: pma-deployment
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: LoadBalancer

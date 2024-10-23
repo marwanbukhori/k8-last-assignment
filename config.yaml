@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: assignment-secret
+data:
+  MYSQL_ROOT_PASSWORD: dGVzdA== #test
+  MYSQL_PASSWORD: dGVzdA==
+  PMA_PASSWORD: dGVzdA==
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: assignment-configmap
+data:
+  MYSQL_DATABASE: test
+  MYSQL_USER: "test"
+  PMA_HOST: mysql-service
+  PMA_PORT: "3306"
+  PMA_USER: "test"
